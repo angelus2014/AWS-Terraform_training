@@ -1,3 +1,4 @@
 .terraform
 hashicorp
-
+terraform.tfstate
+terraform.tfstate.backup
