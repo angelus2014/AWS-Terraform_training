@@ -1,4 +1,7 @@
 module "vpc" {
   source = "./modules/vpc"
-  vpc_name = "Terraform VPC"
+}
+
+module "network" {
+  source = "./modules/network"
 }
