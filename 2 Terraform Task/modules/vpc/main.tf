@@ -1,5 +1,5 @@
 # Create a VPC
-resource "aws_vpc" "am_vpc" {
+resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
 
   tags = {

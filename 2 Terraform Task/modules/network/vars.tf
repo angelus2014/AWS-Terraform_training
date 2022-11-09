@@ -11,3 +11,7 @@ variable "publicsubnet_name" {
   type = list
   default = ["Public Subnet", "Private Subnet"]
 }
+
+variable "vpc_id" {
+  type = string
+}
