@@ -5,8 +5,8 @@ variable "subnet_cidr" {
   default = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
 }
 
-# Define the name of the public subnet
-variable "publicsubnet_name" {
+# Define the name of the subnets
+variable "subnet_name" {
   description = "Define the names of the subnets"
   type = list
   default = ["Public Subnet", "Private Subnet"]
@@ -14,4 +14,11 @@ variable "publicsubnet_name" {
 
 variable "vpc_id" {
   type = string
+}
+
+# Defining the name of the route tables
+variable "route_name" {
+  description = "Defining the name of the public route table"
+  type = list
+  default = ["Public Route", "Private Route"]
 }
