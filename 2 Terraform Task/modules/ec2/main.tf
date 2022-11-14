@@ -44,14 +44,27 @@ resource "aws_key_pair" "key_pair" {
 }
 
 # Create an EC2 instance in Public Subnet
-resource "aws_instance" "ec2instance" {
+resource "aws_instance" "ec2instance1" {
   ami                         = "ami-00189fd46154b0f9d"
   instance_type               = "t3.micro"
   key_name                    = aws_key_pair.key_pair.key_name
   vpc_security_group_ids      = [aws_security_group.sg.id]
-  subnet_id                   = var.subnet_id
+  subnet_id                   = var.subnet_id1
   associate_public_ip_address = true
   tags = {
-    Name = var.pub_ec2_name
+    Name = var.pub_ec2_name[0]
+  }
+}
+
+# Create an EC2 instance in Private Subnet
+resource "aws_instance" "ec2instance2" {
+  ami                         = "ami-00189fd46154b0f9d"
+  instance_type               = "t3.micro"
+  key_name                    = aws_key_pair.key_pair.key_name
+  vpc_security_group_ids      = [aws_security_group.sg.id]
+  subnet_id                   = var.subnet_id2
+  associate_public_ip_address = false
+  tags = {
+    Name = var.pub_ec2_name[1]
   }
 }

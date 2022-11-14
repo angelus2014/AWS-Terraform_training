@@ -2,7 +2,11 @@ variable "vpc_id" {
   type = string
 }
 
-variable "subnet_id" {
+variable "subnet_id1" {
+  type = string
+}
+
+variable "subnet_id2" {
   type = string
 }
 
@@ -19,6 +23,6 @@ variable "sg_name" {
 
 # Define the name of the EC2 in the Public Subnet
 variable "pub_ec2_name" {
-  type    = string
-  default = "Public Subnet EC2"
+  type    = list(any)
+  default = ["Public EC2", "Private EC2"]
 }
