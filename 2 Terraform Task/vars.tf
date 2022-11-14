@@ -1,7 +1,7 @@
 # Define the global S3 bucket name
 variable "s3_bucket_name" {
   type    = string
-  default = "am_s3_bucket"
+  default = "tfams3bucket"
 }
 
 # Define the 'friendly' S3 bucket name
