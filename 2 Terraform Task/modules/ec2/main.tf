@@ -4,6 +4,8 @@ resource "aws_security_group" "sg" {
     Name = var.sg_name
   }
   vpc_id = var.vpc_id
+  # key_name = var.key_name
+
   # Inbound Rules
   # HTTP access from anywhere
   ingress {
@@ -33,5 +35,23 @@ resource "aws_security_group" "sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_key_pair" "key_pair" {
+  key_name   = var.key_name
+  public_key = file("${abspath(path.cwd)}/my-key.pub")
+}
+
+# Create an EC2 instance in Public Subnet
+resource "aws_instance" "ec2instance" {
+  ami                         = "ami-00189fd46154b0f9d"
+  instance_type               = "t3.micro"
+  key_name                    = aws_key_pair.key_pair.key_name
+  vpc_security_group_ids      = [aws_security_group.sg.id]
+  subnet_id                   = var.subnet_id
+  associate_public_ip_address = true
+  tags = {
+    Name = var.pub_ec2_name
   }
 }
