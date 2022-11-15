@@ -10,8 +10,8 @@ variable "s3_friendly_name" {
   default = "S3Bucket"
 }
 
-# Define the DynamoDB name
-variable "dynamodb_name" {
-  type    = string
-  default = "terraform-state-lock_dynamo"
-}
+# # Define the DynamoDB name
+# variable "dynamodb_name" {
+#   type    = string
+#   default = "terraform-state-lock_dynamo"
+# }
