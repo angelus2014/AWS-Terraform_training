@@ -47,6 +47,7 @@ resource "aws_key_pair" "key_pair" {
 resource "aws_instance" "ec2instance1" {
   ami                         = "ami-00189fd46154b0f9d"
   instance_type               = "t3.micro"
+  user_data                   = templatefile("my_script.tftpl", { request_id = "nginx" })
   key_name                    = aws_key_pair.key_pair.key_name
   vpc_security_group_ids      = [aws_security_group.sg.id]
   subnet_id                   = var.subnet_id1
