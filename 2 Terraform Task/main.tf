@@ -21,7 +21,7 @@ module "ec2" {
 
 # Create the S3 bucket resources
 resource "aws_s3_bucket" "tf_am_s3" {
-  bucket = var.s3_bucket_name
+  bucket = "tfams3bucket"
   tags = {
     Name = var.s3_friendly_name
   }
@@ -33,7 +33,7 @@ resource "aws_s3_bucket_acl" "s3_bucket_acl" {
 }
 
 resource "aws_dynamodb_table" "dynamodb-terraform-state-lock" {
-  name           = "terraform-state-lock_dynamo-tfams3bucket"
+  name           = "terraform-state-lock-dynamo-tfams3bucket"
   hash_key       = "LockID"
   read_capacity  = 20
   write_capacity = 20
