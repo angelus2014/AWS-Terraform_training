@@ -1,0 +1,5 @@
+#!/bin/bash
+yum update -y
+amazon-linux-extras install -y ${request_id}1
+systemctl start ${request_id}
+systemctl enable ${request_id}
