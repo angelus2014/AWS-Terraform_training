@@ -43,29 +43,25 @@ resource "aws_key_pair" "key_pair" {
   public_key = file("${abspath(path.cwd)}/my-key.pub")
 }
 
-# Create an EC2 instance in Public Subnet
-resource "aws_instance" "ec2instance1" {
-  ami                         = "ami-02aeff1a953c5c2ff"
-  instance_type               = "t3.micro"
-  user_data                   = templatefile("my_amazon_script.tftpl", { request_id = "nginx" })
-  key_name                    = aws_key_pair.key_pair.key_name
-  vpc_security_group_ids      = [aws_security_group.sg.id]
-  subnet_id                   = var.subnet_id1
-  associate_public_ip_address = true
-  tags = {
-    Name = var.pub_ec2_name[0]
+resource "aws_lb" "web_alb" {
+  name            = "web-alb"
+  security_groups = [aws_security_group.sg.id]
+  subnets = [
+    var.subnet_id1,
+    var.subnet_id2
+  ]
+  cross_zone_load_balancing = true
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 3
+    interval            = 30
+    target              = "HTTP:80/"
   }
-}
-
-# Create an EC2 instance in Private Subnet
-resource "aws_instance" "ec2instance2" {
-  ami                         = "ami-02aeff1a953c5c2ff"
-  instance_type               = "t3.micro"
-  key_name                    = aws_key_pair.key_pair.key_name
-  vpc_security_group_ids      = [aws_security_group.sg.id]
-  subnet_id                   = var.subnet_id2
-  associate_public_ip_address = false
-  tags = {
-    Name = var.pub_ec2_name[1]
+  listener {
+    lb_port           = 80
+    lb_protocol       = "http"
+    instance_port     = "80"
+    instance_protocol = "http"
   }
 }

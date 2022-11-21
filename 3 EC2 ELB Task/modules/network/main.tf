@@ -13,7 +13,7 @@ resource "aws_subnet" "publicsubnet" {
 resource "aws_subnet" "privatesubnet" {
   vpc_id                  = var.vpc_id
   cidr_block              = var.subnet_cidr[1]
-  availability_zone       = "eu-north-1a"
+  availability_zone       = "eu-north-1b"
   map_public_ip_on_launch = false
   tags = {
     Name = var.subnet_name[1]
