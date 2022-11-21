@@ -14,7 +14,7 @@ module "network" {
 module "lb" {
   source = "./modules/lb"
 
-  vpc_id = module.vpc.vpc_id
+  vpc_id     = module.vpc.vpc_id
   subnet_id1 = module.network.subnet_id1
   subnet_id2 = module.network.subnet_id2
 }
