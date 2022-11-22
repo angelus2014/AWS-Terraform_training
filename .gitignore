@@ -2,3 +2,5 @@
 hashicorp
 terraform.tfstate
 terraform.tfstate.backup
+*sublime-project
+*sublime-workspace
