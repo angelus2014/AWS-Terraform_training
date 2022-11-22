@@ -245,6 +245,23 @@ module "asg_sg" {
 #   }
 # }
 
+data "aws_vpc" "vpc-007b3edcc667f4ded" {
+  default = true
+}
+
+data "aws_subnets" "all" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.vpc-007b3edcc667f4ded.id]
+  }
+}
+
+resource "aws_eip" "this" {
+  count = length(data.aws_subnets.all.ids)
+
+  vpc = true
+}
+
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 8.0"
@@ -253,8 +270,10 @@ module "nlb" {
 
   load_balancer_type = "network"
 
-  vpc_id  = module.vpc.vpc_id
-  subnets = ["subnet-0d239f67e8c015018", "subnet-0b170a4507d95b19c", "subnet-0d0a24c09ae1f9e48"]
+  vpc_id = module.vpc.vpc_id
+  #   Use `subnet_mapping` to attach EIPs
+  subnet_mapping = [for i, eip in aws_eip.this : { allocation_id : eip.id, subnet_id : tolist(data.aws_subnets.all.ids)[i] }]
+  # subnets = ["subnet-0a7251e4e48297b95", "subnet-0f4a93dada8949eaf", "subnet-07febd4687d59f0e0"]
 
   # access_logs = {
   #   bucket = "my-nlb-logs"
@@ -269,14 +288,14 @@ module "nlb" {
     }
   ]
 
-  https_listeners = [
-    {
-      port               = 443
-      protocol           = "TLS"
-      certificate_arn    = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
-      target_group_index = 0
-    }
-  ]
+  # https_listeners = [
+  #   {
+  #     port               = 443
+  #     protocol           = "TLS"
+  #     certificate_arn    = "arn:aws:iam::123456789012:server-certificate/test_cert-123456789012"
+  #     target_group_index = 0
+  #   }
+  # ]
 
   http_tcp_listeners = [
     {
