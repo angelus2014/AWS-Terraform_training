@@ -80,6 +80,11 @@ resource "aws_launch_template" "this" {
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
 
+  network_interfaces {
+    associate_public_ip_address = true
+    delete_on_termination       = true
+  }
+
   lifecycle {
     create_before_destroy = true
   }
@@ -91,7 +96,7 @@ module "auto-scaling-group-demo" {
 
   name = "external-${local.name}"
 
-  vpc_zone_identifier = module.vpc.private_subnets
+  vpc_zone_identifier = module.vpc.public_subnets
   security_groups     = [module.asg_sg.security_group_id]
   min_size            = 0
   max_size            = 1
@@ -128,9 +133,9 @@ module "asg_sg" {
   name        = local.name
   description = "A security group"
   # vpc_id      = var.
-  vpc_id = module.vpc.vpc_id
-
-  egress_rules = ["all-all"]
+  vpc_id        = module.vpc.vpc_id
+  ingress_rules = ["all-all"]
+  egress_rules  = ["all-all"]
 
   tags = local.tags
 }
