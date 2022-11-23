@@ -1,0 +1,15 @@
+#!/bin/sh
+# export DEBIAN_FRONTEND="noninteractive' apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold"
+touch ${request_id}
+touch test1.txt
+sudo dnf update
+touch test2.txt
+# sudo DEBIAN_FRONTEND=noninteractive apt -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+# sudo apt -y upgrade
+# touch test3.txt
+sudo dnf install ${request_id}
+touch test4.txt
+sudo systemctl enable ${request_id}
+touch test5.txt
+sudo systemctl start ${request_id}
+touch test6.txt
