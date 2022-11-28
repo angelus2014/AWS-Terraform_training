@@ -35,16 +35,25 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
+data "aws_subnets" "private" {
+  filter {
+    name   = "tag:Name"
+    values = ["private"]
+  }
+}
+
+
 resource "aws_launch_template" "this" {
   name_prefix   = "${local.name}-launch-template"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
+  # count         = "3"
 
   network_interfaces {
     associate_public_ip_address = false
     delete_on_termination       = true
-    # subnet_id                   = var.private_subnets
-    # security_groups             = [module.asg_sg.security_group_id]
+    subnet_id                   = element(module.vpc.private_subnets, 0)
+    security_groups             = [module.asg_sg.security_group_id]
   }
   key_name = var.key_name
   lifecycle {
@@ -78,10 +87,9 @@ module "vpc" {
   name = local.name
   cidr = "10.99.0.0/18"
 
-  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  public_subnets  = ["10.99.0.0/24", "10.99.1.0/24", "10.99.2.0/24"]
-  private_subnets = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
-
+  azs                  = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  public_subnets       = ["10.99.0.0/24", "10.99.1.0/24", "10.99.2.0/24"]
+  private_subnets      = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
   enable_dns_hostnames = true
   enable_dns_support   = true
 

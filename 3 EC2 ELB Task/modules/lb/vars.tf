@@ -1,21 +1,22 @@
+# Create the variable for the SSH key
 variable "key_name" {
   type    = string
   default = "My Key"
 }
 
-# # Define the name of the Security Group
-# variable "sg_name" {
-#   type    = string
-#   default = "Security Group"
-# }
+# Create the variable for the public subnet
+variable "subnet_id1" {
+  type    = string
+  default = "10.99.0.0/24"
+}
 
-# # Define the name of the EC2 in the Public Subnet
-# variable "pub_ec2_name" {
-#   type    = list(any)
-#   default = ["Public EC2", "Private EC2"]
-# }
+# Create the variable for the private subnet
+variable "subnet_id2" {
+  type    = string
+  default = "10.99.1.0/24"
+}
 
-# Set up the VPC zone
+# Set up the variable for the VPC zone
 variable "vpc_zone_identifier" {
   type    = list(string)
   default = null
