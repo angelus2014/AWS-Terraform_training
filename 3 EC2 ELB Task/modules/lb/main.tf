@@ -20,7 +20,6 @@ locals {
   EOT
 }
 
-
 # Launch template
 data "aws_ami" "amazon_linux" {
   most_recent = true
@@ -42,12 +41,10 @@ data "aws_subnets" "private" {
   }
 }
 
-
 resource "aws_launch_template" "this" {
   name_prefix   = "${local.name}-launch-template"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
-  # count         = "3"
 
   network_interfaces {
     associate_public_ip_address = false
