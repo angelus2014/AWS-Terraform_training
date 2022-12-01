@@ -4,10 +4,6 @@ resource "aws_key_pair" "key_pair" {
 }
 
 locals {
-  asg_name = "am-auto-scaling-group"
-  lb_name  = "am-load-balancer"
-  vpc_name = "am-vpc"
-  region   = "eu-north-1"
   tags = {
     Environment = "demo"
     Blog        = "auto-scaling-group-setup"
@@ -31,7 +27,7 @@ data "aws_ami" "amazon_linux" {
     name = "name"
 
     values = [
-      "amzn-ami-hvm-*-x86_64-gp2",
+      "amzn2-ami-kernel-5.10-hvm-*-x86_64-gp2",
     ]
   }
 }
@@ -44,7 +40,7 @@ data "aws_subnets" "private" {
 }
 
 resource "aws_launch_template" "this" {
-  name_prefix   = "${local.asg_name}-launch-template"
+  name_prefix   = "${var.asg_name}-launch-template"
   image_id      = data.aws_ami.amazon_linux.id
   instance_type = "t3.micro"
 
@@ -64,7 +60,7 @@ resource "aws_launch_template" "this" {
 module "auto-scaling-group-demo" {
   source = "terraform-aws-modules/autoscaling/aws"
 
-  name = "external-${local.asg_name}"
+  name = "external-${var.asg_name}"
 
   vpc_zone_identifier = module.vpc.private_subnets
   security_groups     = [module.asg_sg.security_group_id]
@@ -74,9 +70,9 @@ module "auto-scaling-group-demo" {
 
   create_launch_template = false
   launch_template        = aws_launch_template.this.name
-  user_data              = base64encode(local.user_data)
-
-  tags = local.tags
+  # user_data              = base64encode(local.user_data)
+  user_data = templatefile("${abspath(path.cwd)}/modules/lb/templates/user-data.sh", {})
+  tags      = local.tags
 }
 
 # Application Load Balancer
@@ -117,10 +113,10 @@ resource "aws_lb_listener" "lb_listener" {
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = local.vpc_name
+  name = var.vpc_name
   cidr = "10.99.0.0/18"
 
-  azs                  = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  azs                  = ["${var.region}a", "${var.region}b", "${var.region}c"]
   public_subnets       = ["10.99.0.0/24", "10.99.1.0/24", "10.99.2.0/24"]
   private_subnets      = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
   enable_dns_hostnames = true
@@ -133,7 +129,7 @@ module "asg_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
 
-  name                = local.asg_name
+  name                = var.asg_name
   description         = "A security group"
   vpc_id              = module.vpc.vpc_id
   ingress_cidr_blocks = ["10.99.0.0/18"]
@@ -147,7 +143,7 @@ module "lb_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 4.0"
 
-  name                = local.lb_name
+  name                = var.lb_name
   description         = "A security group"
   vpc_id              = module.vpc.vpc_id
   ingress_cidr_blocks = ["0.0.0.0/0"]
