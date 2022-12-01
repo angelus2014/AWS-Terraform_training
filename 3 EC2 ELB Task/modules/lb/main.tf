@@ -8,14 +8,6 @@ locals {
     Environment = "demo"
     Blog        = "auto-scaling-group-setup"
   }
-
-  # user_data = <<-EOT
-  # #!/bin/bash
-  # yum update -y
-  # amazon-linux-extras install -y nginx1
-  # systemctl start nginx
-  # systemctl enable nginx
-  # EOT
 }
 
 # Launch template
