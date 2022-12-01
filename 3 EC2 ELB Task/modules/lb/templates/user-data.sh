@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 touch test1.txt
 yum update -y
 touch test2.txt

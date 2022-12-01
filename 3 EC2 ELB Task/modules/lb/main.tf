@@ -9,13 +9,13 @@ locals {
     Blog        = "auto-scaling-group-setup"
   }
 
-  user_data = <<-EOT
-  #!/bin/bash
-  yum update -y
-  amazon-linux-extras install -y nginx1
-  systemctl start nginx
-  systemctl enable nginx
-  EOT
+  # user_data = <<-EOT
+  # #!/bin/bash
+  # yum update -y
+  # amazon-linux-extras install -y nginx1
+  # systemctl start nginx
+  # systemctl enable nginx
+  # EOT
 }
 
 # Launch template
@@ -78,7 +78,7 @@ module "auto-scaling-group-demo" {
 # Application Load Balancer
 resource "aws_lb_target_group" "lb_target" {
   name        = "lb-target"
-  port        = 80
+  port        = "80"
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = module.vpc.vpc_id
