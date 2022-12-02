@@ -144,3 +144,51 @@ module "lb_sg" {
 
   tags = local.tags
 }
+
+# Create Internet Gateway
+resource "aws_internet_gateway" "igw" {
+  vpc_id = module.vpc.vpc_id
+}
+
+# Create Route Table for Public Subnet
+resource "aws_route_table" "rt" {
+  vpc_id = module.vpc.vpc_id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+  tags = {
+    Name = var.route_name[0]
+  }
+}
+resource "aws_route_table_association" "rt_associate_public" {
+  subnet_id      = module.vpc.public_subnets
+  route_table_id = aws_route_table.rt.id
+}
+
+# Create EIP
+resource "aws_eip" "eip" {
+  vpc = true
+}
+
+# Create NAT Gateway
+resource "aws_nat_gateway" "gw" {
+  allocation_id = aws_eip.eip.id
+  subnet_id     = module.vpc.public_subnets
+}
+
+# Create Route Table for NAT Gateway
+resource "aws_route_table" "rt_NAT" {
+  vpc_id = module.vpc.vpc_id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.gw.id
+  }
+  tags = {
+    Name = var.route_name[1]
+  }
+}
+resource "aws_route_table_association" "rt_associate_private" {
+  subnet_id      = module.vpc.private_subnets
+  route_table_id = aws_route_table.rt_NAT.id
+}

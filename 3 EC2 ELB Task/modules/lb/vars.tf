@@ -33,3 +33,9 @@ variable "region" {
   type    = string
   default = "eu-north-1"
 }
+
+# Define the name of the route tables
+variable "route_name" {
+  type    = list(any)
+  default = ["Public Route", "Private Route"]
+}
