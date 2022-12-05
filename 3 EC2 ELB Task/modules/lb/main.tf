@@ -40,8 +40,7 @@ resource "aws_launch_template" "this" {
     associate_public_ip_address = false
     delete_on_termination       = true
     # subnet_id                   = var.private_subnet_id
-    subnet_id = element(var.private_subnet_id, 0)
-    # subnet_id                   = element(module.vpc.private_subnets, 0)
+    subnet_id       = element(var.private_subnet_id, 0)
     security_groups = [module.asg_sg.security_group_id]
   }
   key_name = var.key_name
@@ -56,7 +55,8 @@ module "auto-scaling-group-demo" {
 
   name = "external-${var.asg_name}"
 
-  vpc_zone_identifier = var.private_subnet_id
+  # vpc_zone_identifier = var.private_subnet_id
+  vpc_zone_identifier = element(var.private_subnet_id, 0)
   # vpc_zone_identifier = module.vpc.private_subnets
   security_groups  = [module.asg_sg.security_group_id]
   min_size         = 0
@@ -88,8 +88,8 @@ resource "aws_lb" "app_lb" {
   internal           = true
   load_balancer_type = "application"
   security_groups    = [module.lb_sg.security_group_id]
-  subnets            = var.public_subnet_id
-  # subnets            = module.vpc.public_subnets
+  # subnets            = var.public_subnet_id
+  subnets                    = element(var.public_subnet_id, 0)
   enable_deletion_protection = false
 }
 
