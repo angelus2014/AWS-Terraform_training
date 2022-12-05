@@ -24,12 +24,12 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-data "aws_subnets" "private" {
-  filter {
-    name   = "tag:Name"
-    values = ["private"]
-  }
-}
+# data "aws_subnets" "private" {
+#   filter {
+#     name   = "tag:Name"
+#     values = ["private"]
+#   }
+# }
 
 resource "aws_launch_template" "this" {
   name_prefix   = "${var.asg_name}-launch-template"
@@ -55,9 +55,8 @@ module "auto-scaling-group-demo" {
 
   name = "external-${var.asg_name}"
 
-  # vpc_zone_identifier = var.private_subnet_id
-  vpc_zone_identifier = element(var.private_subnet_id, 0)
-  # vpc_zone_identifier = module.vpc.private_subnets
+  vpc_zone_identifier = var.private_subnet_id
+  # vpc_zone_identifier = element(var.private_subnet_id, 0)
   security_groups  = [module.asg_sg.security_group_id]
   min_size         = 0
   max_size         = 1
@@ -88,8 +87,8 @@ resource "aws_lb" "app_lb" {
   internal           = true
   load_balancer_type = "application"
   security_groups    = [module.lb_sg.security_group_id]
-  # subnets            = var.public_subnet_id
-  subnets                    = element(var.public_subnet_id, 0)
+  subnets            = var.public_subnet_id
+  # subnets                    = element(var.public_subnet_id, 0)
   enable_deletion_protection = false
 }
 
