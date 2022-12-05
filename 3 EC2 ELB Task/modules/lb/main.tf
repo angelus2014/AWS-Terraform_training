@@ -47,6 +47,8 @@ resource "aws_launch_template" "this" {
   lifecycle {
     create_before_destroy = true
   }
+  # user_data = templatefile("${abspath(path.cwd)}/modules/lb/templates/user-data.sh", {})
+  user_data = filebase64("${path.module}/templates/user-data.sh")
 }
 
 # Auto Scaling Group
@@ -64,9 +66,7 @@ module "auto-scaling-group-demo" {
 
   create_launch_template = false
   launch_template        = aws_launch_template.this.name
-  # user_data              = base64encode(local.user_data)
-  user_data = templatefile("${abspath(path.cwd)}/modules/lb/templates/user-data.sh", {})
-  tags      = local.tags
+  tags                   = local.tags
 }
 
 # Application Load Balancer
