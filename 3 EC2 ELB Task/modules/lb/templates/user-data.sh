@@ -1,6 +1,6 @@
 #!/bin/sh
 touch test1.txt
-yum update -y
+# yum update -y
 touch test2.txt
 amazon-linux-extras install -y nginx1
 touch test3.txt

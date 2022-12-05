@@ -10,6 +10,11 @@ variable "vpc_zone_identifier" {
   default = null
 }
 
+# Define the vpc_id variable
+variable "vpc_id" {
+  type = string
+}
+
 # Create the variable for the ASG name
 variable "asg_name" {
   type    = string
@@ -38,4 +43,14 @@ variable "region" {
 variable "route_name" {
   type    = list(any)
   default = ["Public Route", "Private Route"]
+}
+
+# Create the variable for the public subnet
+variable "public_subnet_id" {
+  type = list(any)
+}
+
+# Create the variable for the private subnet
+variable "private_subnet_id" {
+  type = list(any)
 }
