@@ -1,23 +1,23 @@
-# Create the overall vpc
-module "vpc" {
-  source = "./modules/vpc"
-}
+# # Create the overall vpc
+# module "vpc" {
+#   source = "./modules/vpc"
+# }
 
-# Create the networking components: subnets, routing, gateways
-module "network" {
-  source = "./modules/network"
+# # Create the networking components: subnets, routing, gateways
+# module "network" {
+#   source = "./modules/network"
 
-  vpc_id = module.vpc.vpc_id
-}
+#   vpc_id = module.vpc.vpc_id
+# }
 
-# Create the ec2 components: EC2, Routing Table
-module "ec2" {
-  source = "./modules/ec2"
+# # Create the ec2 components: EC2, Routing Table
+# module "ec2" {
+#   source = "./modules/ec2"
 
-  vpc_id     = module.vpc.vpc_id
-  subnet_id1 = module.network.subnet_id1
-  subnet_id2 = module.network.subnet_id2
-}
+#   vpc_id     = module.vpc.vpc_id
+#   subnet_id1 = module.network.subnet_id1
+#   subnet_id2 = module.network.subnet_id2
+# }
 
 # Create the S3 bucket resources
 resource "aws_s3_bucket" "tf_am_s3" {
