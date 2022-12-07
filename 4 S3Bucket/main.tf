@@ -1,7 +1,7 @@
-# # Create the overall vpc
-# module "vpc" {
-#   source = "./modules/vpc"
-# }
+# Create the overall vpc
+module "vpc" {
+  source = "./modules/vpc"
+}
 
 # # Create the networking components: subnets, routing, gateways
 # module "network" {
