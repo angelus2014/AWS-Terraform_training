@@ -1,17 +1,5 @@
-# Define the global S3 bucket name
-variable "s3_bucket_name" {
+# Define the default region
+variable "region" {
   type    = string
-  default = "tfams3bucket"
+  default = "eu-north-1"
 }
-
-# Define the 'friendly' S3 bucket name
-variable "s3_friendly_name" {
-  type    = string
-  default = "S3Bucket"
-}
-
-# # Define the DynamoDB name
-# variable "dynamodb_name" {
-#   type    = string
-#   default = "terraform-state-lock_dynamo"
-# }
