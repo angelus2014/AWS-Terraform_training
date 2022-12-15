@@ -1,14 +1,5 @@
-provider "aws" {
-  region = "eu-west-1"
-}
-
-provider "aws" {
-  alias  = "central"
-  region = "eu-central-1"
-}
-
 resource "aws_iam_role" "replication" {
-  name = "tf-iam-role-replication-12345"
+  name = "tf-iam-role-replication-am1969"
 
   assume_role_policy = <<POLICY
 {
@@ -28,7 +19,7 @@ POLICY
 }
 
 resource "aws_iam_policy" "replication" {
-  name = "tf-iam-role-policy-replication-12345"
+  name = "tf-iam-role-policy-replication-am1969"
 
   policy = <<POLICY
 {
